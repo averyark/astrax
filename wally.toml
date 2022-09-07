@@ -1,0 +1,16 @@
+[package]
+name = "averyark/astrax"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+Janitor = "howmanysmall/janitor@^1.13.13"
+TableUtil = "finobinos/tableutil@3.2.1"
+ProfileService = "brittonfischer/profileservice@2.1.5"
+Remote = "sleitnick/remote@1.0.4"
+Signal = "sleitnick/signal@1.0.1"
+Promise = "evaera/promise@4.0.0"
+TestEZ = "roblox/testez@0.4.1"
+t = "osyrisrblx/t@3.0.0"
+BoatTween = "penguindevs/boattween@1.0.1"

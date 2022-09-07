@@ -1,0 +1,27 @@
+{
+  "name": "Astrax",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "shared": {
+        "$path": "src/shared"
+      },
+      "utilities": {
+        "$path": "utilities"
+      },
+      "utilities.spec": {
+        "$path": "utilities.spec"
+      },
+      "Packages": {
+        "$path": "Packages"
+      }
+    },
+    
+    "ServerScriptService": {
+    },
+
+    "StarterPlayer": {
+    }
+  }
+}
