@@ -8,10 +8,10 @@
         "$path": "src/shared"
       },
       "utilities": {
-        "$path": "utilities"
+        "$path": "src/utilities"
       },
       "utilities.spec": {
-        "$path": "utilities.spec"
+        "$path": "src/utilities.spec"
       },
       "Packages": {
         "$path": "Packages"
