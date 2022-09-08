@@ -12,6 +12,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local cacheUtilitiesModules = {}
 local cacheUtilitiesMethods = {}
 local cacheUtilitiesLib = {}
+local testDump = {["TEST_LOAD_TIME"] = {}}
 
 -- Packages
 local Janitor = require(script.Parent.Janitor)
@@ -47,28 +48,6 @@ local utilityCache = Instance.new("Folder")
 utilityCache.Parent = workspace
 utilityCache.Name = "__utilityCache"
 
-local run = function()
-	for _, module in script:GetChildren() do
-		if isModule(module) and not isSpecialFile(module) then
-			cacheUtilitiesMethods[module.Name] = module
-			local expand = require(module)
-			cacheUtilitiesLib[module.Name] = expand
-			for key, value in expand do
-				if cacheUtilitiesMethods[key] then
-					--utilWarn("Method shadowing;", key, module.Name)
-					continue
-				end
-				if not isFunction(value) then
-					continue
-				end
-				cacheUtilitiesMethods[key] = value
-			end
-		end
-	end
-end
-
-run()
-
 type typesList = {
 	instance: typeof(require(script.instance)),
 	tween: typeof(require(script.tween)),
@@ -81,15 +60,24 @@ type typesList = {
 	localization: typeof(require(script.localization)),
 	sound: typeof(require(script.sound)),
 	debounce: typeof(require(script.debounce)),
+	promise: typeof(Promise.new()),
+	started: typeof(Promise.new()),
 }
 
-local __self = setmetatable({
-	__utilitiesMethods = cacheUtilitiesMethods,
-	__utilitiesFolder = cacheUtilitiesModules,
-	__utilitiesLib = cacheUtilitiesLib,
-	__testModeEnabled = RunService:IsStudio() and true or false,
-}, {
-	__index = {
+local initPromises = {}
+
+local index
+index = {
+	__TEST_DUMP = testDump,
+	_getRaw = function(mt)
+		return mt
+	end,
+	_getProperty = function(mt, key)
+		return mt[key]
+	end,
+}
+index.promise = Promise.new(function(resolve)
+	--[[local list = {
 		instance = require(script.instance),
 		tween = require(script.tween),
 		string = require(script.string),
@@ -100,14 +88,63 @@ local __self = setmetatable({
 		data = require(script.data),
 		localization = require(script.localization),
 		sound = require(script.sound),
-		debounce = require(script.debounce),
-		_getRaw = function(mt)
-			return mt
-		end,
-		_getProperty = function(mt, key)
-			return mt[key]
-		end,
-	},
+		debounce = require(script.debounce)
+	}]]
+
+	local promises = {}
+	local resolveStartPromise
+
+	index.started = Promise.new(function(r)
+		resolveStartPromise = r
+	end)
+
+	for _, module in pairs(script:GetChildren()) do
+		if isModule(module) then
+			table.insert(
+				promises,
+				Promise.new(function(_resolve)
+					local clock = os.clock()
+					local expanded = require(module)
+					_resolve()
+					index[module.Name] = expanded
+					cacheUtilitiesLib[module.Name] = expanded
+					if t["function"](expanded.__init) then
+						table.insert(
+							initPromises,
+							Promise.new(function(__resolve)
+								expanded.__init()
+								__resolve()
+							end)
+						)
+					end
+					testDump["TEST_LOAD_TIME"][module.Name] = os.clock() - clock
+				end):catch(warn)
+			)
+		end
+	end
+
+	Promise.all(promises)
+		:andThen(function()
+			resolve()
+		end)
+		:catch(function(err)
+			warn(("[fatal-init-error] Astra failed to run\n%s"):format(err))
+		end)
+
+	Promise.all(initPromises)
+		:andThen(function()
+			resolveStartPromise()
+		end)
+	print(promises, initPromises)
+end)
+
+local __self = setmetatable({
+	__utilitiesMethods = cacheUtilitiesMethods,
+	__utilitiesFolder = cacheUtilitiesModules,
+	__utilitiesLib = cacheUtilitiesLib,
+	__testModeEnabled = false,
+}, {
+	__index = index,
 	__newindex = function(mt, key, value)
 		if key == "test" then
 			if value then

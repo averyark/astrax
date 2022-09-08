@@ -176,7 +176,7 @@ uiUtil.get = function(uiName: string, _trace: string?): ui
 	return coroutine.yield()
 end
 
-task.spawn(function()
+function uiUtil.__init()
 	if not RunService:IsClient() then
 		return
 	end
@@ -212,7 +212,7 @@ task.spawn(function()
 			uiUtil.new(child)
 		end
 	end)
-end)
+end
 
 --[[
     Passes the UI object of an interface with the particular name upon its initialization into PlayerGui, also calls if the UI is already initialized prior to the function usage.

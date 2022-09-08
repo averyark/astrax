@@ -226,11 +226,11 @@ type remoteSet = typeof(remoteUtil.new("test", "set"))
 type remote = remoteGet | remoteSet
 
 if isClient then
-	task.spawn(function()
+	function remoteUtil.__init()
 		instance.observeForChildrenThatIsA(remoteFolder, "RemoteEvent", function(insc)
 			createClientRemote(insc)
 		end)
-	end)
+	end
 end
 
 return setmetatable({}, {

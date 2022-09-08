@@ -37,7 +37,8 @@ local registry = {
 }
 local mt: mt = {}
 
-local DeepCopyTable; DeepCopyTable = function(tabl, _cache)
+local DeepCopyTable
+DeepCopyTable = function(tabl, _cache)
 	-- Keep a internal cache so we can account for cyclic tables by checking if they were already processed:
 	_cache = _cache or {}
 	if _cache[tabl] then
@@ -443,7 +444,9 @@ export type mt = typeof(initPlayer(Instance.new("Player"))) & {
 	edit: ({}, any, any) -> __mt,
 	iterate: ({}, (playerObject: mt) -> ()) -> __mt,
 })]]
-task.spawn(init)
+function playerUtil.__init()
+	init()
+end
 
 return playerUtil --[[:: {
     me: () -> (mt),

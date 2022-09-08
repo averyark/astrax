@@ -2,17 +2,37 @@ local localizationUtil = {}
 
 local LocalizationService = game:GetService("LocalizationService")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+
+if not RunService:IsClient() then
+	return "[localization] Only usable on the client"
+end
+
+local Promise = require(script.Parent.Parent.Promise)
 
 local player = Players.LocalPlayer
 local sourceLanguageCode = "en"
 
 local playerTranslator, fallbackTranslator
-local foundPlayerTranslator = pcall(function()
+local playerTranslatorPromise = Promise.new(function(resolve)
 	playerTranslator = LocalizationService:GetTranslatorForPlayerAsync(player)
+	resolve()
 end)
-local foundFallbackTranslator = pcall(function()
+local fallbackTranslatorPromise = Promise.new(function(resolve)
 	fallbackTranslator = LocalizationService:GetTranslatorForLocaleAsync(sourceLanguageCode)
+	resolve()
 end)
+
+function localizationUtil.__init()
+	--playerTranslatorPromise:await()
+	--fallbackTranslatorPromise:await()
+end
+
+function localizationUtil.await()
+	playerTranslatorPromise:await()
+	fallbackTranslatorPromise:await()
+end
 
 -- Create a method TranslationHelper.setLanguage to load a new translation for the TranslationHelper
 function localizationUtil.setLanguage(newLanguageCode)
@@ -37,10 +57,10 @@ function localizationUtil.translate(text, object)
 	end
 	local translation = ""
 	local foundTranslation = false
-	if foundPlayerTranslator then
+	if playerTranslatorPromise:awaitStaus() == Promise.Status.Resolved then
 		return playerTranslator:Translate(object, text)
 	end
-	if foundFallbackTranslator then
+	if fallbackTranslatorPromise:awaitStaus() == Promise.Status.Resolved then
 		return fallbackTranslator:Translate(object, text)
 	end
 	return false
@@ -52,12 +72,12 @@ function localizationUtil.translateByKey(key, arguments)
 	local foundTranslation = false
 
 	-- First tries to translate for the player's language (if a translator was found)
-	if foundPlayerTranslator then
+	if playerTranslatorPromise:awaitStaus() == Promise.Status.Resolved then
 		foundTranslation = pcall(function()
 			translation = playerTranslator:FormatByKey(key, arguments)
 		end)
 	end
-	if foundFallbackTranslator and not foundTranslation then
+	if fallbackTranslatorPromise:awaitStaus() == Promise.Status.Resolved and not foundTranslation then
 		foundTranslation = pcall(function()
 			translation = fallbackTranslator:FormatByKey(key, arguments)
 		end)

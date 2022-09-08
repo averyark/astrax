@@ -1,0 +1,28 @@
+{
+  "name": "astrax-test",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "Packages": {
+        "$path": "Packages"
+      },
+      "astrax": {
+        "$path": "src/utilities"
+      }
+    },
+    "ServerScriptService": {
+        "$className": "ServerScriptService",
+        "test": {
+            "$path": "test"
+        }
+    },
+    "HttpService": {
+      "$className": "HttpService",
+      "$properties": {
+        "HttpEnabled": true
+      }
+    }
+  }
+}
