@@ -18,7 +18,6 @@ local Promise = require(script.Parent.Parent.Promise)
 local Janitor = require(script.Parent.Parent.Janitor)
 local remote = require(script.Parent.remote)
 local Signal = require(script.Parent.Parent.Signal)
-local TableUtil = require(script.Parent.Parent.TableUtil)
 local deb = require(script.Parent.debounce)
 
 local isClient = RunService:IsClient()
@@ -38,6 +37,28 @@ local registry = {
 }
 local mt: mt = {}
 
+local DeepCopyTable; DeepCopyTable = function(tabl, _cache)
+	-- Keep a internal cache so we can account for cyclic tables by checking if they were already processed:
+	_cache = _cache or {}
+	if _cache[tabl] then
+		return
+	end
+	_cache[tabl] = true
+
+	local deepCopiedTable = {}
+
+	for key, value in pairs(tabl) do
+		if typeof(value) == "table" then
+			deepCopiedTable[key] = DeepCopyTable(value, _cache)
+			continue
+		end
+
+		deepCopiedTable[key] = value
+	end
+
+	return deepCopiedTable
+end
+
 function mt:__changed(index, value, cache)
 	self.changed:Fire(index, value, cache)
 end
@@ -46,12 +67,12 @@ function mt:editLocal(index, value)
 	local valueCache
 	if isClient then
 		local rawValueCache = self._properties.client[index]
-		valueCache = typeof(rawValueCache) == "table" and TableUtil.DeepCopyTable(rawValueCache) or rawValueCache
+		valueCache = typeof(rawValueCache) == "table" and DeepCopyTable(rawValueCache) or rawValueCache
 		self._properties.client[index] = value
 		self._clientChanged:Fire(index, value, valueCache)
 	else
 		local rawValueCache = self._properties.server[index]
-		valueCache = typeof(rawValueCache) == "table" and TableUtil.DeepCopyTable(rawValueCache) or rawValueCache
+		valueCache = typeof(rawValueCache) == "table" and DeepCopyTable(rawValueCache) or rawValueCache
 		self._properties.server[index] = value
 		self._serverChanged:Fire(index, value, valueCache)
 	end
@@ -99,12 +120,12 @@ function mt:__onCrossEdited(index, value)
 	local valueCache
 	if isClient then
 		local rawValueCache = self._properties.client[index]
-		valueCache = typeof(rawValueCache) == "table" and TableUtil.DeepCopyTable(rawValueCache) or rawValueCache
+		valueCache = typeof(rawValueCache) == "table" and DeepCopyTable(rawValueCache) or rawValueCache
 		self.server[index] = value
 		self._serverChanged:Fire(index, value, valueCache)
 	else
 		local rawValueCache = self._properties.client[index]
-		valueCache = typeof(rawValueCache) == "table" and TableUtil.DeepCopyTable(rawValueCache) or rawValueCache
+		valueCache = typeof(rawValueCache) == "table" and DeepCopyTable(rawValueCache) or rawValueCache
 		self.client[index] = value
 		self._clientChanged:Fire(index, value, valueCache)
 	end

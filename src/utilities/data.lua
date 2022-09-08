@@ -11,7 +11,6 @@ local RunService = game:GetService("RunService")
 
 local t = require(script.Parent.Parent.t)
 local Promise = require(script.Parent.Parent.Promise)
-local TableUtil = require(script.Parent.Parent.TableUtil)
 local Signal = require(script.Parent.Parent.Signal)
 local Janitor = require(script.Parent.Parent.Janitor)
 
@@ -28,6 +27,28 @@ dataUtil = {
 	callbacks = {},
 	onChangeCallbacks = {},
 }
+
+local DeepCopyTable; DeepCopyTable = function(tabl, _cache)
+	-- Keep a internal cache so we can account for cyclic tables by checking if they were already processed:
+	_cache = _cache or {}
+	if _cache[tabl] then
+		return
+	end
+	_cache[tabl] = true
+
+	local deepCopiedTable = {}
+
+	for key, value in pairs(tabl) do
+		if typeof(value) == "table" then
+			deepCopiedTable[key] = DeepCopyTable(value, _cache)
+			continue
+		end
+
+		deepCopiedTable[key] = value
+	end
+
+	return deepCopiedTable
+end
 
 local data = {}
 
@@ -59,14 +80,14 @@ compare = function(tb, otherTb, path, changes) -- failed
 		local otherValue = otherTb[k] -- after
 
 		if typeof(value) == "table" and typeof(otherValue) == "table" then
-			local newPath = TableUtil.DeepCopyTable(path)
+			local newPath = DeepCopyTable(path)
 			table.insert(newPath, k)
 			compare(value, otherValue, newPath, changes)
 			continue
 		end
 
 		if value ~= otherValue then
-			local newPath = TableUtil.DeepCopyTable(path)
+			local newPath = DeepCopyTable(path)
 			table.insert(newPath, k)
 			table.insert(changes, {
 				path = newPath,
@@ -141,7 +162,7 @@ function data:capture(callback: (storage: {}) -> ())
 	if not callback then
 		return
 	end
-	local snapchot = TableUtil.DeepCopyTable(self.storage)
+	local snapchot = DeepCopyTable(self.storage)
 	callback(self.storage) -- wait for callback
 	local changes = compare(self.storage, snapchot)
 	fireListeners(self.storage, snapchot, changes, self.player)
@@ -212,7 +233,7 @@ function dataUtil.capture(player: Player, callback: (storage: {}) -> ())
 		return
 	end
 	local storage = dataUtil.get(player).storage
-	local snapchot = TableUtil.DeepCopyTable(storage)
+	local snapchot = DeepCopyTable(storage)
 	callback(storage) -- wait for callback
 	local changes = compare(storage, snapchot)
 	fireListeners(storage, snapchot, changes)
@@ -361,7 +382,7 @@ function dataUtil.start(template: { [any]: any }?, name: string?)
 		end)
 		remote.get("__dataUtil_applyDataChange"):Connect(function(changes)
 			debug.profilebegin("__dataUtil__dataApplicance")
-			local snapchot = TableUtil.DeepCopyTable(dataUtil.storage)
+			local snapchot = DeepCopyTable(dataUtil.storage)
 			for _, change in changes do -- apply changes
 				local last, key = decipher(dataUtil.storage, change.path)
 				last[key] = change.value.new

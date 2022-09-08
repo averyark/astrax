@@ -9,7 +9,6 @@ description = "Astrax is just a simple framework."
 
 [dependencies]
 Janitor = "howmanysmall/janitor@^1.13.13"
-TableUtil = "finobinos/tableutil@3.2.1"
 ProfileService = "brittonfischer/profileservice@2.1.5"
 Remote = "sleitnick/remote@1.0.4"
 Signal = "sleitnick/signal@1.0.1"

@@ -16,7 +16,6 @@ local cacheUtilitiesLib = {}
 -- Packages
 local Janitor = require(script.Parent.Janitor)
 local Promise = require(script.Parent.Promise)
-local TableUtil = require(script.Parent.TableUtil)
 local t = require(script.Parent.t)
 local TestEZ = require(script.Parent.TestEZ)
 

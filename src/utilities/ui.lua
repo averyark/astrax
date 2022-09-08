@@ -16,7 +16,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- Packages
 local Janitor = require(script.Parent.Parent.Janitor)
 local Promise = require(script.Parent.Parent.Promise)
-local TableUtil = require(script.Parent.Parent.TableUtil)
 local t = require(script.Parent.Parent.t)
 local Signal = require(script.Parent.Parent.Signal)
 
