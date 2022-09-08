@@ -9,7 +9,7 @@
 local instanceUtil = {}
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local t = require(ReplicatedStorage.Packages.t)
+local t = require(script.Parent.Parent.t)
 
 local isInstance = t.typeof("Instance")
 

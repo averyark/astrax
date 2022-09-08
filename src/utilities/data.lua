@@ -9,11 +9,11 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local t = require(ReplicatedStorage.Packages.t)
-local Promise = require(ReplicatedStorage.Packages.Promise)
-local TableUtil = require(ReplicatedStorage.Packages.TableUtil)
-local Signal = require(ReplicatedStorage.Packages.Signal)
-local Janitor = require(ReplicatedStorage.Packages.Janitor)
+local t = require(script.Parent.Parent.t)
+local Promise = require(script.Parent.Parent.Promise)
+local TableUtil = require(script.Parent.Parent.TableUtil)
+local Signal = require(script.Parent.Parent.Signal)
+local Janitor = require(script.Parent.Parent.Janitor)
 
 local playerUtil = require(script.Parent.player)
 local remote = require(script.Parent.remote)
@@ -344,7 +344,7 @@ end
 
 function dataUtil.start(template: { [any]: any }?, name: string?)
 	if not isClient then
-		local ProfileService = require(ReplicatedStorage.Packages.ProfileService)
+		local ProfileService = require(script.Parent.Parent.ProfileService)
 		dataUtil.profileStore = ProfileService.GetProfileStore(name or dataUtil.name, template)
 
 		playerUtil.observe(function(self)
@@ -375,6 +375,6 @@ function dataUtil.start(template: { [any]: any }?, name: string?)
 end
 
 export type data = typeof(data.new())
---type profileStore = typeof(require(ReplicatedStorage.Packages.ProfileService).GetProfileStore("", {}))
+--type profileStore = typeof(require(script.Parent.Parent.ProfileService).GetProfileStore("", {}))
 
 return dataUtil

@@ -13,12 +13,12 @@ local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local t = require(ReplicatedStorage.Packages.t)
-local Promise = require(ReplicatedStorage.Packages.Promise)
-local Janitor = require(ReplicatedStorage.Packages.Janitor)
+local t = require(script.Parent.Parent.t)
+local Promise = require(script.Parent.Parent.Promise)
+local Janitor = require(script.Parent.Parent.Janitor)
 local remote = require(script.Parent.remote)
-local Signal = require(ReplicatedStorage.Packages.Signal)
-local TableUtil = require(ReplicatedStorage.Packages.TableUtil)
+local Signal = require(script.Parent.Parent.Signal)
+local TableUtil = require(script.Parent.Parent.TableUtil)
 local deb = require(script.Parent.debounce)
 
 local isClient = RunService:IsClient()
@@ -402,7 +402,7 @@ export type mt = typeof(initPlayer(Instance.new("Player"))) & {
 	debounce: deb.debounceGroup,
 	data: ({
 		storage: {},
-		profile: typeof(require(ReplicatedStorage.Packages.ProfileService).GetProfileStore():LoadProfileAsync()),
+		profile: typeof(require(script.Parent.Parent.ProfileService).GetProfileStore():LoadProfileAsync()),
 		capture: () -> (),
 		listen: () -> (),
 		changed: signal,

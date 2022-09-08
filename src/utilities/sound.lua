@@ -10,7 +10,7 @@ local RunService = game:GetService("RunService")
 local SoundService = game:GetService("SoundService")
 
 local instance = require(script.Parent.instance)
-local t = require(ReplicatedStorage.Packages.t)
+local t = require(script.Parent.Parent.t)
 
 local default = "default"
 local soundGroups = {}

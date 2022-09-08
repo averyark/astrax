@@ -1,8 +1,11 @@
 [package]
 name = "averyark/astrax"
-version = "0.1.0"
+version = "0.2.1"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
+authors = ["averyark"]
+license = "MIT"
+description = "Astrax is just a simple framework."
 
 [dependencies]
 Janitor = "howmanysmall/janitor@^1.13.13"

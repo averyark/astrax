@@ -1,34 +1,12 @@
-# Anime Ninja Simulator
-
-Anime Ninja Simulator is a multiplayer Naruto IP based MMORPG game. The game will be set in various villages, hidden villages, and countries from the Naturo universe. 
-
-There will be about 10 areas on release based on a setting for each area. There will be a boss at the end of each area. There will be missions the player should complete that helps them to progress to the next area. Areas can be unlocked by completing all the quests in the current area OR by saving up enough currency to unlock the next area. 
-
-Players will be able to use equipped ninja characters to engage in combat with an enemy NPC. Optionally, players can activate a button to directly damage a selected enemy NPC. Upon defeating an enemy, the player earns currency directly or by picking up dropped currency.
-
-Ninjas are characters the player can equip to fight enemy NPCs with. These are based on Nartuo characters.
-
-The objective of the game is to unlock and equip stronger ninjas by progressing to higher areas by earning currency.
-
-[Google Docs](https://docs.google.com/document/d/1gvsl3oDkl1MrIaWaRKGyx2nzcB9sx54sERcVYANOglE)
-
-#### References
-- https://narutofanon.fandom.com/wiki/World_of_Naruto
-- https://naruto.fandom.com/wiki/Geography
-- https://naruto.fandom.com/wiki/Category:Characters
-
-
-***
+# Astrax
 
 ### Contributors
 
-> [@AveryArk](https://github.com/averyark) Lead Programmer and maintainer for the github repository\
-> [@AverageLuaU](https://github.com/averageluau) Backend and Frontend Programmer
+> [@AveryArk](https://github.com/averyark) \
 
-***
+---
+
 ### Dependencies
-
-The project utilizes various helper modules to increase code development efficiency while attempting to minimize bug caused by faulty code.
 
 > **Knit**\
 > Knit orientates core game logic around services and controllers, allowing us to inherit cleaner organization across codebases and easier maintainability.\
@@ -52,9 +30,11 @@ The project utilizes various helper modules to increase code development efficie
 
 > **BoatTween**\
 > BoatTween offers 32 easing styles (compared to Roblox’s 11) and they all have the 3 easing directions as well, allowing you to find exactly the tween timing you desire. It covers serveral TweenService insufficiency and brings more API to the table. `The util module offers a fast tween method using BoatTween`
+>
 > ```lua
 > utilities.tween.instance(instance, properties, duration, easingStyle,easingDirection)
->```
+> ```
+>
 > [Documentation](https://github.com/boatbomber/BoatTween)
 
 > **Cmdr**\
@@ -69,13 +49,4 @@ The project utilizes various helper modules to increase code development efficie
 > Matter is a pure ECS library with fast archetypical entity storage, automatic system scheduling, and a slick API featuring topologically-aware state. Matter empowers users to build games that are extensible, performant, and easy to debug.\
 > [Documentation](https://eryn.io/matter/docs/GettingStarted)
 
-***
-
-### Practices
-
-- `OOP` is suggested over `POP`; procedural programming is inferior as it lacks readability and reusability, especially in this project setup.
-- Commetning with the purpose of your code is suggested but don't comment excessively.
-- Well maintained Desktop and Mobile support is expected. Most of our players will be PC and Phones players.
-- Putting the International community into consideration is one of our goal, which is why text localization is crucial.
-- Interact with UIs using `utilities.ui.observeFor(uiName)`
-- Always prefer methods from the utilities library unless it is inferior in your use case
+---

@@ -10,9 +10,9 @@ local RunService = game:GetService("RunService")
 local SoundService = game:GetService("SoundService")
 
 local instance = require(script.Parent.instance)
-local t = require(ReplicatedStorage.Packages.t)
-local Janitor = require(ReplicatedStorage.Packages.Janitor)
-local Promise = require(ReplicatedStorage.Packages.Promise)
+local t = require(script.Parent.Parent.t)
+local Janitor = require(script.Parent.Parent.Janitor)
+local Promise = require(script.Parent.Parent.Promise)
 
 local debounceUtil = {}
 

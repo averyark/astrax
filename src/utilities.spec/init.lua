@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Janitor = require(ReplicatedStorage.Packages.Janitor)
+local Janitor = require(script.Parent.Parent.Janitor)
 
 -- this will be the hardest code to read in your life
 

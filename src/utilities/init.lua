@@ -14,11 +14,11 @@ local cacheUtilitiesMethods = {}
 local cacheUtilitiesLib = {}
 
 -- Packages
-local Janitor = require(ReplicatedStorage.Packages.Janitor)
-local Promise = require(ReplicatedStorage.Packages.Promise)
-local TableUtil = require(ReplicatedStorage.Packages.TableUtil)
-local t = require(ReplicatedStorage.Packages.t)
-local TestEZ = require(ReplicatedStorage.Packages.TestEZ)
+local Janitor = require(script.Parent.Janitor)
+local Promise = require(script.Parent.Promise)
+local TableUtil = require(script.Parent.TableUtil)
+local t = require(script.Parent.t)
+local TestEZ = require(script.Parent.TestEZ)
 
 -- types
 local isFolder = t.instanceIsA("Folder")

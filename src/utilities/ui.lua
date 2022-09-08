@@ -14,11 +14,11 @@ local ReplicatedFirst = game:GetService("ReplicatedFirst")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- Packages
-local Janitor = require(ReplicatedStorage.Packages.Janitor)
-local Promise = require(ReplicatedStorage.Packages.Promise)
-local TableUtil = require(ReplicatedStorage.Packages.TableUtil)
-local t = require(ReplicatedStorage.Packages.t)
-local Signal = require(ReplicatedStorage.Packages.Signal)
+local Janitor = require(script.Parent.Parent.Janitor)
+local Promise = require(script.Parent.Parent.Promise)
+local TableUtil = require(script.Parent.Parent.TableUtil)
+local t = require(script.Parent.Parent.t)
+local Signal = require(script.Parent.Parent.Signal)
 
 local isInstance = t.typeof("Instance")
 local isAGuiObject = t.instanceIsA("GuiObject")

@@ -4,7 +4,7 @@ registry = "test"
 
 [[package]]
 name = "averyark/astrax"
-version = "0.1.0"
+version = "0.2.1"
 dependencies = [["BoatTween", "penguindevs/boattween@1.0.1"], ["Janitor", "howmanysmall/janitor@1.14.1"], ["ProfileService", "brittonfischer/profileservice@2.1.5"], ["Promise", "evaera/promise@4.0.0"], ["Remote", "sleitnick/remote@1.0.4"], ["Signal", "sleitnick/signal@1.2.1"], ["TableUtil", "finobinos/tableutil@3.2.2"], ["TestEZ", "roblox/testez@0.4.1"], ["t", "osyrisrblx/t@3.0.0"]]
 
 [[package]]

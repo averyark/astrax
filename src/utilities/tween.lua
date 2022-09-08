@@ -10,8 +10,8 @@ local TweenService = game:GetService("TweenService")
 
 local tween = {}
 
-local t = require(ReplicatedStorage.Packages.t)
-local BoatTween = require(ReplicatedStorage.Packages.BoatTween)
+local t = require(script.Parent.Parent.t)
+local BoatTween = require(script.Parent.Parent.BoatTween)
 
 type easingStyles =
 	"RidiculousWiggle"
