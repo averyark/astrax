@@ -77,14 +77,14 @@ end
 ]]
 ui.observe = function(self: ui, callbackInit: (ui: ui) -> (), callbackDeinit: (ui: ui) -> ()?)
 	if self.uiObject and self.uiObject:IsDescendantOf(Players.LocalPlayer.PlayerGui) then
-		callbackInit(self)
+		Promise.try(callbackInit, self)
 	end
 	self._maid:Add(self.onInit:Connect(function()
-		callbackInit(self)
+		Promise.try(callbackInit, self)
 	end))
 	if callbackDeinit then
 		self._maid:Add(self.onDeinit:Connect(function()
-			callbackDeinit(self)
+			Promise.try(callbackDeinit, self)
 		end))
 	end
 end
@@ -208,8 +208,8 @@ function uiUtil.__init()
 
 	local pgui = Players.LocalPlayer:WaitForChild("PlayerGui")
 
-	local test_hide = pgui:FindFirstChild("test-hide")
-	local test_run = pgui:FindFirstChild("test-run")
+	local test_hide = StarterGui:FindFirstChild("test-hide") and pgui:WaitForChild("test-hide")
+	local test_run = StarterGui:FindFirstChild("test-run") and pgui:WaitForChild("test-run")
 
 	if test_hide then
 		for _, child in test_hide:GetChildren() do
@@ -229,6 +229,18 @@ function uiUtil.__init()
 	end
 
 	ReplicatedStorage.Interface.ChildAdded:Connect(function(child)
+		if isScreenGui(child) then
+			uiUtil.new(child)
+		end
+	end)
+
+	test_hide.ChildAdded:Connect(function(child)
+		if isScreenGui(child) then
+			uiUtil.new(child)
+		end
+	end)
+
+	test_run.ChildAdded:Connect(function(child)
 		if isScreenGui(child) then
 			uiUtil.new(child)
 		end
