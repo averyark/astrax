@@ -204,7 +204,7 @@ tweenSequenceTemplate.andThen = function(self: TweenSequenceTemplate): TweenSequ
 	return self
 end
 tweenSequence.__exec__andThen = function(self: Tweenable, args: {})
-	self.tween.completed:Wait()
+	self.tween.Completed:Wait()
 end
 
 --[[
