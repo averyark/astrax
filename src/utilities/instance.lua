@@ -128,6 +128,7 @@ function instanceUtil.childWithCondition(parent: Instance, callback: (Instance) 
 			table.insert(instances, child)
 		end
 	end
+	return instances
 end
 
 --[[
@@ -142,6 +143,7 @@ function instanceUtil.descendantWithCondition(ancestor: Instance, callback: (Ins
 			table.insert(instances, descendant)
 		end
 	end
+	return instances
 end
 
 --[[

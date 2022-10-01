@@ -1,6 +1,6 @@
 [package]
 name = "averyark/astrax"
-version = "0.3.4"
+version = "0.4.1"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 authors = ["averyark"]
@@ -16,3 +16,4 @@ Promise = "evaera/promise@4.0.0"
 TestEZ = "roblox/testez@0.4.1"
 t = "osyrisrblx/t@3.0.0"
 BoatTween = "penguindevs/boattween@1.0.1"
+TableUtil = "tpc9000/tableutil@0.1.1"

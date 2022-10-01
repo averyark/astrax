@@ -59,9 +59,13 @@ local listeners = {}
 ui.__index = ui
 
 ui.__resetInterface = function(self: ui)
+	if self.uiObject then
+		self.uiObject:Destroy()
+	end
 	self.uiObject = self._realUiObject:Clone()
 	self.uiObject.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
 	self.onInit:Fire(self.uiObject)
+	self._maid:Add(self.uiObject)
 end
 
 --[[
@@ -76,8 +80,14 @@ end
 	```
 ]]
 ui.observe = function(self: ui, callbackInit: (ui: ui) -> (), callbackDeinit: (ui: ui) -> ()?)
+	local observed = false
 	if self.uiObject and self.uiObject:IsDescendantOf(Players.LocalPlayer.PlayerGui) then
+		self.uiObject.Parent:WaitForChild(self.uiObject.Name)
 		Promise.try(callbackInit, self)
+		observed = true
+	end
+	if observed then
+		task.wait(.5)
 	end
 	self._maid:Add(self.onInit:Connect(function()
 		Promise.try(callbackInit, self)
@@ -116,6 +126,10 @@ uiUtil.new = function(uiObject: ScreenGui | string)
 	t.strict(isInstance(uiObject))
 	t.strict(isScreenGui(uiObject) or t.string(uiObject))
 
+	if t.string(uiObject) and userInterfaces[uiObject] or userInterfaces[uiObject.Name] then
+		return
+	end
+
 	local _realUiObject
 
 	if not isScreenGui(uiObject) then
@@ -131,14 +145,14 @@ uiUtil.new = function(uiObject: ScreenGui | string)
 	local self = setmetatable({
 		_realUiObject = _realUiObject,
 		_maid = Janitor.new(),
-		uiObject = _realUiObject:Clone(),
+		uiObject = nil,
 		onInit = Signal.new(),
 		onDeinit = Signal.new(),
 	}, ui)
 
-	self._maid:Add(self._realUiObject.Destroying:Connect(function()
-		self:destroy()
-	end))
+	--self._maid:Add(self._realUiObject.Destroying:Connect(function()
+		--self:destroy()
+	--end))
 	self._maid:Add(Players.LocalPlayer.CharacterRemoving:Connect(function(character)
 		self.uiObject:Destroy()
 		self.uiObject = nil
@@ -149,10 +163,11 @@ uiUtil.new = function(uiObject: ScreenGui | string)
 			self:__resetInterface()
 		end
 	end))
-	self._maid:Add(self.uiObject)
+	if Players.LocalPlayer.Character then
+		self:__resetInterface()
+	end
 
 	userInterfaces[_realUiObject.Name] = self
-	self.uiObject.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
 
 	local _uiListeners = listeners[self._realUiObject.Name]
 
@@ -183,7 +198,6 @@ uiUtil.get = function(uiName: string, _trace: string?): ui
 	end
 	coroutine.resume(coroutine.create(function()
 		task.wait(5)
-		print(userInterfaces)
 		if not userInterfaces[uiName] then
 			warn(
 				("[ui] %s might not be a valid Interface %s"):format(
@@ -208,41 +222,54 @@ function uiUtil.__init()
 
 	local pgui = Players.LocalPlayer:WaitForChild("PlayerGui")
 
-	local test_hide = StarterGui:FindFirstChild("test-hide") and pgui:WaitForChild("test-hide")
-	local test_run = StarterGui:FindFirstChild("test-run") and pgui:WaitForChild("test-run")
+	pgui.ChildAdded:Connect(function(child)
+		if child.Name == "test-run" or child.Name == "test-hide" then
+			task.wait()
+			child:Destroy()
+		end
+	end)
+	task.spawn(function()
+		pgui:WaitForChild("test-run"):Destroy()
+		pgui:WaitForChild("test-hide"):Destroy()
+	end)
+
+	local test_hide = StarterGui:FindFirstChild("test-hide")
+	local test_run = StarterGui:FindFirstChild("test-run")
 
 	if test_hide then
 		for _, child in test_hide:GetChildren() do
 			child.Enabled = false
+			child.Parent = nil
 		end
 	end
 	if test_run then
 		for _, child in test_run:GetChildren() do
-			if isScreenGui(child) and not userInterfaces[child.Name] then
-				uiUtil.new(child)
+			if isScreenGui(child) then
+				child.Parent = ReplicatedStorage.Interface
 			end
 		end
 	end
 
 	for _, interface in ReplicatedStorage.Interface:GetChildren() do
-		uiUtil.new(interface)
-	end
-
-	ReplicatedStorage.Interface.ChildAdded:Connect(function(child)
-		if isScreenGui(child) then
-			uiUtil.new(child)
+		if isScreenGui(interface) and not userInterfaces[interface.Name] then
+			uiUtil.new(interface)
 		end
-	end)
-
-	test_hide.ChildAdded:Connect(function(child)
-		if isScreenGui(child) then
+	end
+	ReplicatedStorage.Interface.ChildAdded:Connect(function(child)
+		if isScreenGui(child) and not userInterfaces[child.Name] then
 			uiUtil.new(child)
 		end
 	end)
 
 	test_run.ChildAdded:Connect(function(child)
 		if isScreenGui(child) then
-			uiUtil.new(child)
+			child.Parent = ReplicatedStorage.Interface
+		end
+	end)
+	test_hide.ChildAdded:Connect(function(child)
+		if isScreenGui(child) then
+			child.Parent = nil
+			child.Enabled = false
 		end
 	end)
 end

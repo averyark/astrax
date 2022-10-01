@@ -4,8 +4,8 @@ registry = "test"
 
 [[package]]
 name = "averyark/astrax"
-version = "0.2.1"
-dependencies = [["BoatTween", "penguindevs/boattween@1.0.1"], ["Janitor", "howmanysmall/janitor@1.14.1"], ["ProfileService", "brittonfischer/profileservice@2.1.5"], ["Promise", "evaera/promise@4.0.0"], ["Remote", "sleitnick/remote@1.0.4"], ["Signal", "sleitnick/signal@1.2.1"], ["TestEZ", "roblox/testez@0.4.1"], ["t", "osyrisrblx/t@3.0.0"]]
+version = "0.4.0"
+dependencies = [["BoatTween", "penguindevs/boattween@1.0.1"], ["Janitor", "howmanysmall/janitor@1.14.1"], ["ProfileService", "brittonfischer/profileservice@2.1.5"], ["Promise", "evaera/promise@4.0.0"], ["Remote", "sleitnick/remote@1.0.4"], ["Signal", "sleitnick/signal@1.2.1"], ["TableUtil", "tpc9000/tableutil@0.1.1"], ["TestEZ", "roblox/testez@0.4.1"], ["t", "osyrisrblx/t@3.0.0"]]
 
 [[package]]
 name = "brittonfischer/profileservice"
@@ -55,4 +55,9 @@ dependencies = [["Option", "sleitnick/option@1.0.4"]]
 [[package]]
 name = "sleitnick/signal"
 version = "1.2.1"
+dependencies = []
+
+[[package]]
+name = "tpc9000/tableutil"
+version = "0.1.1"
 dependencies = []

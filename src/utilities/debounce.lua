@@ -54,10 +54,10 @@ debounceUtil.type = {
 debounceUtil.groups = {}
 debounceUtil.indexed = {}
 
-debounce.new = function(identifier: string, _type: types, ...)
+debounce.new = function(_type: types, ...)
 	local self
 	self = setmetatable({
-		Name = identifier,
+		--Name = identifier,
 		_type = _type,
 		_loaded = false,
 		_group = "none",
@@ -65,15 +65,11 @@ debounce.new = function(identifier: string, _type: types, ...)
 		__index = function(_, index)
 			if index == "State" then
 				if _type == debounceUtil.type.Timer then
-					if t.number(self._tL) and t.number(self._int) then
-						return if os.clock() - self._tL < self._int
-							then debounceUtil.state.Inactive
-							else debounceUtil.state.Active
-					end
+					return if os.clock() - self._tL < self._int
+						then debounceUtil.state.Inactive
+						else debounceUtil.state.Active
 				elseif _type == debounceUtil.type.Boolean then
-					if t.boolean(self._bool) then
-						return if self._bool then debounceUtil.state.Inactive else debounceUtil.state.Active
-					end
+					return if self._bool then debounceUtil.state.Inactive else debounceUtil.state.Active
 				end
 				return debounceUtil.state.Suspended
 			end
@@ -91,6 +87,25 @@ debounce.new = function(identifier: string, _type: types, ...)
 	return self :: debounce
 end
 
+--[[
+    Sets the identifier for the debounceObject, it is required if you want to index the debounceObject.
+    ```lua
+    local debounceObject = debounce.new("something", debounceUtil.type.Timer, 2)
+    debounceObject:set(os.clock() + 5) -- 5 second in the future
+    task.wait(2)
+    if debounceObject:isLocked() then
+        -- Still locked
+    end
+    task.wait(3)
+    if debounceObject:isLocked() then
+    end
+    -- Not locked
+    ```
+--]]
+function debounce:setName(name: string)
+	self.Name = name
+	return self
+end
 --[[
     Sets the debounceObject state to the passed params.
     ```lua
@@ -172,6 +187,7 @@ end
     ```
 --]]
 function debounce:index()
+	assert(t.string(self.Name), "Debounce must have a name to be indexed")
 	debounceUtil.indexed[self.Name] = self
 	return self :: debounce
 end
@@ -184,6 +200,7 @@ end
     ```
 --]]
 function debounce:Destroy()
+	if not self.Name then return end
 	debounceUtil.indexed[self.Name] = nil
 end
 
@@ -269,6 +286,7 @@ debounceGroup.__index = debounceGroup
 export type types = { "Timer" | "Boolean" }
 export type states = { "Active" | "Inactive" | "Suspended" }
 export type debounce = { Name: string, State: states } & ({
+	setName: (debounce, string) -> (debounce),
 	set: (debounce, ...any) -> (debounce),
 	lock: (debounce) -> (debounce),
 	isLocked: (debounce) -> (boolean),
